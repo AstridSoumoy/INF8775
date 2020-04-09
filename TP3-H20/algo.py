@@ -89,7 +89,17 @@ def selectionMauvaisNoeuds(noeudsInfectee):
 
     return listSupression
 
-
+def findBetterSolution(graph, PersonnesInfectes, k, resultat, noeudsInfectes):
+    newList = noeudsInfectes.copy()
+    for node in newList:
+        newGraph = graph.copy()
+        newInfectes = PersonnesInfectes.copy()
+        creerLien(newGraph, node[0], node[1])
+        resultatTest = findSolution(newGraph, newInfectes, k)
+        if(resultatTest <= 50):
+            newList.remove(node)
+            print(newList)
+    return newList
 
 def main(argv):
     #sys.setrecursionlimit(10**6)
@@ -125,36 +135,31 @@ def main(argv):
 
 
     # On get les noeuds qui pose problemes
-    noeudsInfectee = []
+    noeudsInfectes = []
     for i in range(0, len(graph)):
         noeuds = getNoeudsInfectees(graph, i, k, PersonnesInfectes)
-        noeudsInfectee += noeuds
+        noeudsInfectes += noeuds
     #for i in range(0, len(noeudsInfectee)):
     #    print(noeudsInfectee[i])
     #print(graph)
 
-    listNoeudSupression = selectionMauvaisNoeuds(noeudsInfectee)
+    listNoeudSupression = selectionMauvaisNoeuds(noeudsInfectes)
 
-
-#Initialisation du premier passage 
+    graphTemp = graph
+#Initialisation du premier passage
     MeilleurListeNoeudsSuprrimer = []
-    for index in range(0, len(noeudsInfectee)):
-        couperLien(graph, noeudsInfectee[index][0], noeudsInfectee[index][1])
+    for index in range(0, len(noeudsInfectes)):
+        couperLien(graphTemp, noeudsInfectes[index][0], noeudsInfectes[index][1])
     #print(graph)
-    resultat = findSolution(graph, PersonnesInfectes, k)
+    resultat = findSolution(graphTemp, PersonnesInfectes, k)
     if(resultat < 50):
-        MeilleurListeNoeudsSuprrimer = noeudsInfectee
+        MeilleurListeNoeudsSuprrimer = noeudsInfectes
 
     print(MeilleurListeNoeudsSuprrimer)
-    print(resultat)
-    testindex = 6
 
-    creerLien(graph, MeilleurListeNoeudsSuprrimer[testindex][0], MeilleurListeNoeudsSuprrimer[testindex][1])
-    resultat = findSolution(graph, PersonnesInfectes, k)
-    if(resultat < 50):
-        MeilleurListeNoeudsSuprrimer.pop(testindex)
-    print(MeilleurListeNoeudsSuprrimer)
-    print(resultat)
+    MeilleurListeNoeudsSuprrimer = findBetterSolution(graph, PersonnesInfectes, k, resultat, noeudsInfectes)
+
+
     return
 
 if __name__ == "__main__":
