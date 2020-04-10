@@ -59,6 +59,24 @@ def getNoeudsInfectees(graph, index, k, listInfectee):
                 count += 1
     return noeudSupprimer
 
+def getNoeudsInfectees2(graph, index, k, listInfectee):
+    count = 0
+    noeudSupprimer = []
+    tempListInfectee = listInfectee.copy()
+    while(len(tempListInfectee) != 0):
+        noeudAleatoire = randint(0, len(tempListInfectee) - 1)
+        valeur = graph[index][tempListInfectee[noeudAleatoire]]
+        if (valeur == 1):
+            if(count == k-1):
+                noeud = (index, tempListInfectee[noeudAleatoire])
+                noeudSupprimer.append(noeud)
+            else:
+                count += 1
+            tempListInfectee.remove(tempListInfectee[noeudAleatoire])
+        else:
+            tempListInfectee.remove(tempListInfectee[noeudAleatoire])
+    return noeudSupprimer
+
 
 def couperLien(graph, index1, index2):
     graph[index1][index2] = 0
@@ -152,6 +170,33 @@ def findBetterSolutionRandomly(graph, PersonnesInfectes, k, noeudsInfectes, show
                             showRelations(newList, showWhat)
     return newList
 
+def findBetterSolutionRandomly2(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution):
+    newList = []
+    while True:
+        newGraph = graph.copy()
+        newInfectes = PersonnesInfectes.copy()
+        listSuppression = selectionMauvaisNoeuds(noeudsInfectes)
+        for i in range(0, len(listSuppression)):
+            noeud = noeudsInfectes[listSuppression[i]]
+            couperLien(newGraph, noeud[0], noeud[1])
+            newList += noeud
+            resultatTest = findSolution(newGraph, newInfectes, k)
+        if len(newList) < len(betterSolution):
+            showRelations(newList, showWhat)
+    return newList
+
+def getEchantillonAleatoire(graph, k, PersonnesInfectes):
+    #ECHANTILLON ALEATOIRE !!!!
+    mauvaixNoeuds = []
+    for i in range(0, len(graph)):
+        noeud = getNoeudsInfectees2(graph, i, k, PersonnesInfectes)
+        mauvaixNoeuds += noeud
+
+    for noeud in mauvaixNoeuds:
+        print(noeud)
+
+    return mauvaixNoeuds
+
 
 def main(argv):
     file = open(argv[0], "r")
@@ -169,18 +214,21 @@ def main(argv):
     graph = np.array([np.array(list(mapGraph)) for mapGraph in A])
 
 
-    k = int(argv[1])
+    k = 2 #int(argv[1])
     showWhat = "number"
     
     if len(argv) == 3:
         if argv[2] == "-p":
             showWhat = "relations"
 
+
+
+    test = getEchantillonAleatoire(graph, k, PersonnesInfectes)
     # On get les noeuds qui pose problemes
     noeudsInfectes = getNoeudsInfectes(graph, k, PersonnesInfectes)
     betterSolution = initFirstSolution(graph,PersonnesInfectes, k, noeudsInfectes, showWhat)
-    betterSolution = findBetterSolution(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
-    betterSolution = findBetterSolutionRandomly(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
+    betterSolution = findBetterSolution(graph, PersonnesInfectes, k, test, showWhat, betterSolution)
+    betterSolution = findBetterSolutionRandomly2(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
 
     return
 
