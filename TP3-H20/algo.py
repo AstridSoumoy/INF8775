@@ -2,7 +2,6 @@ import sys
 import csv
 import numpy as np
 import time
-import pandas as pd
 import sys
 from random import *
 
