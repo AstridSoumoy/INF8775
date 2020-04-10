@@ -192,8 +192,9 @@ def getEchantillonAleatoire(graph, k, PersonnesInfectes):
         noeud = getNoeudsInfectees2(graph, i, k, PersonnesInfectes)
         mauvaixNoeuds += noeud
 
-    for noeud in mauvaixNoeuds:
-        print(noeud)
+    
+    #for noeud in mauvaixNoeuds:
+        #print(noeud)
 
     return mauvaixNoeuds
 
@@ -225,10 +226,10 @@ def main(argv):
 
     test = getEchantillonAleatoire(graph, k, PersonnesInfectes)
     # On get les noeuds qui pose problemes
-    noeudsInfectes = getNoeudsInfectes(graph, k, PersonnesInfectes)
-    betterSolution = initFirstSolution(graph,PersonnesInfectes, k, noeudsInfectes, showWhat)
+    #noeudsInfectes = getNoeudsInfectes(graph, k, PersonnesInfectes)
+    betterSolution = initFirstSolution(graph,PersonnesInfectes, k, test, showWhat)
     betterSolution = findBetterSolution(graph, PersonnesInfectes, k, test, showWhat, betterSolution)
-    betterSolution = findBetterSolutionRandomly2(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
+    #betterSolution = findBetterSolutionRandomly2(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
 
     return
 
