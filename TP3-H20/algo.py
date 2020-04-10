@@ -41,7 +41,6 @@ def estInfectee(ligne, listInfectee, k, graph):
 
 def verificationEntourage(graph, listInfectee, k):
     for i in range(0, len(graph)):
-        #print(listInfectee)
         if (not (i in listInfectee)) & estInfectee(graph[i], listInfectee, k, graph):
             listInfectee.append(i)
             verificationEntourage(graph, listInfectee, k)
@@ -49,21 +48,15 @@ def verificationEntourage(graph, listInfectee, k):
 
 def getNoeudsInfectees(graph, index, k, listInfectee):
     count = 0
-    #print(count)
     noeudSupprimer = []
     for i in range(0, len(graph[index])):
         valeur = graph[index][i]
-        #print(valeur)
         if ((valeur == 1) & (i in listInfectee)):
-            #print("on est dans le premier if")
             if(count == k-1):
-                #print("on est dans le deuxieme if")
-                noeud = (index, i) #str(index) + " " + str(i)
+                noeud = (index, i)
                 noeudSupprimer.append(noeud)
             else:
-                #print("on est dans le else")
                 count += 1
-    #print(count)
     return noeudSupprimer
 
 
@@ -80,24 +73,24 @@ def selectionMauvaisNoeuds(noeudsInfectee):
     nombreDeSupression = randint(0, len(noeudsInfectee) - 1)
     while(len(listSupression) < nombreDeSupression):
         suppressionAleatoire = randint(0, len(noeudsInfectee) -1)
-        #print("supression: ")
-        #print(suppressionAleatoire)
         if not(suppressionAleatoire in listSupression):
-            #print("AJOUT")
             listSupression.append(suppressionAleatoire)
 
     return listSupression
 
-def findBetterSolution(graph, PersonnesInfectes, k, resultat, noeudsInfectes, showWhat):
+def findBetterSolution(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution):
     newList = noeudsInfectes.copy()
     for node in newList:
         newGraph = graph.copy()
         newInfectes = PersonnesInfectes.copy()
         creerLien(newGraph, node[0], node[1])
         resultatTest = findSolution(newGraph, newInfectes, k)
-        if(resultatTest <= 50):
+        if resultatTest <= 50:
             newList.remove(node)
-            showRelations(newList, showWhat)
+            if len(newList) < len(betterSolution):
+                showRelations(newList, showWhat)
+    return newList
+
 
 def showRelations(NodeList, showWhat):
     print("")  
@@ -105,24 +98,66 @@ def showRelations(NodeList, showWhat):
         for node in NodeList:
             print(str(node[0]) + " " + str(node[1]))
     if showWhat == "number":
-        print(str(len(NodeList)))  
+        print(str(len(NodeList))) 
+    sys.stdout.flush()
+
+def initFirstSolution(graph,PersonnesInfectes, k, noeudsInfectes, showWhat): 
+    graphTemp = graph
+    MeilleurListeNoeudsSuprrimer = []
+    for index in range(0, len(noeudsInfectes)):
+        couperLien(graphTemp, noeudsInfectes[index][0], noeudsInfectes[index][1])
+    resultat = findSolution(graphTemp, PersonnesInfectes, k)
+    if(resultat < 50):
+        MeilleurListeNoeudsSuprrimer = noeudsInfectes
+    showRelations(MeilleurListeNoeudsSuprrimer, showWhat)
+    return MeilleurListeNoeudsSuprrimer
+
+def getNoeudsInfectes(graph, k, PersonnesInfectes):
+    noeudsInfectes = []
+    for i in range(0, len(graph)):
+        noeuds = getNoeudsInfectees(graph, i, k, PersonnesInfectes)
+        noeudsInfectes += noeuds
+    return noeudsInfectes
+
+
+
+def findBetterSolutionRandomly(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution):
+    newList = noeudsInfectes.copy()
+    while True:
+        for node in newList:
+            newGraph = graph.copy()
+            newInfectes = PersonnesInfectes.copy()
+            creerLien(newGraph, node[0], node[1])
+            resultatTest = findSolution(newGraph, newInfectes, k)
+            if(resultatTest <= 50):
+                    newList.remove(node)
+                    if len(newList) < len(betterSolution):
+                        showRelations(newList, showWhat)
+            for node2 in newList:
+                creerLien(newGraph, node2[0], node2[1])
+                resultatTest = findSolution(newGraph, newInfectes, k)
+                if(resultatTest <= 50):
+                    newList.remove(node)
+                    newList.remove(node2)
+                    if len(newList) < len(betterSolution):
+                        showRelations(newList, showWhat)
+                for node3 in newList:
+                    creerLien(newGraph, node3[0], node3[1])
+                    resultatTest = findSolution(newGraph, newInfectes, k)
+                    if(resultatTest <= 50):
+                        newList.remove(node)
+                        newList.remove(node2)
+                        newList.remove(node3)
+                        if len(newList) < len(betterSolution):
+                            showRelations(newList, showWhat)
+    return newList
+
 
 def main(argv):
-    #sys.setrecursionlimit(10**6)
     file = open(argv[0], "r")
     lines = file.readlines()
     countLines = len(lines)
     file.close()
-
-
-    #premieiereLigne = np.loadtxt(lines[0])
-    #derniereLigne = np.loadtxt(lines[countLines])
-
-    #f = open("yourfile.txt","w")
-    #for i in range(1,countLines-1):
-    #    f.write(lines[i])
-    #graphe = np.loadtxt(f)
-    #f.close()
 
 
     notes = readFile(argv[0])
@@ -132,7 +167,6 @@ def main(argv):
     PersonnesInfectes = list(notes[1])
     A = list(notes[2])
     graph = np.array([np.array(list(mapGraph)) for mapGraph in A])
-    #print(PermiereLigne)
 
 
     k = int(argv[1])
@@ -141,29 +175,12 @@ def main(argv):
     if len(argv) == 3:
         if argv[2] == "-p":
             showWhat = "relations"
+
     # On get les noeuds qui pose problemes
-    noeudsInfectes = []
-    for i in range(0, len(graph)):
-        noeuds = getNoeudsInfectees(graph, i, k, PersonnesInfectes)
-        noeudsInfectes += noeuds
-
-    listNoeudSupression = selectionMauvaisNoeuds(noeudsInfectes)
-
-    graphTemp = graph
-    #Initialisation du premier passage
-    MeilleurListeNoeudsSuprrimer = []
-    for index in range(0, len(noeudsInfectes)):
-        couperLien(graphTemp, noeudsInfectes[index][0], noeudsInfectes[index][1])
-    resultat = findSolution(graphTemp, PersonnesInfectes, k)
-    if(resultat < 50):
-        MeilleurListeNoeudsSuprrimer = noeudsInfectes
-
-    showRelations(MeilleurListeNoeudsSuprrimer, showWhat)
-
-    findBetterSolution(graph, PersonnesInfectes, k, resultat, noeudsInfectes, showWhat)
-
-
-
+    noeudsInfectes = getNoeudsInfectes(graph, k, PersonnesInfectes)
+    betterSolution = initFirstSolution(graph,PersonnesInfectes, k, noeudsInfectes, showWhat)
+    betterSolution = findBetterSolution(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
+    betterSolution = findBetterSolutionRandomly(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
 
     return
 
