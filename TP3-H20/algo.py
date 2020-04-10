@@ -128,9 +128,10 @@ def main(argv):
     #print(PermiereLigne)
 
 
-    k = 2  # argv[1]
-    #if argv[2] == "-p":
-    #    print("-p entered")
+    k = int(argv[1])
+    if len(argv) == 3:
+        if argv[2] == "-p":
+            print("-p entered")
 
 
     # On get les noeuds qui pose problemes
