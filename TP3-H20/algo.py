@@ -88,7 +88,7 @@ def selectionMauvaisNoeuds(noeudsInfectee):
 
     return listSupression
 
-def findBetterSolution(graph, PersonnesInfectes, k, resultat, noeudsInfectes):
+def findBetterSolution(graph, PersonnesInfectes, k, resultat, noeudsInfectes, showWhat):
     newList = noeudsInfectes.copy()
     for node in newList:
         newGraph = graph.copy()
@@ -97,8 +97,15 @@ def findBetterSolution(graph, PersonnesInfectes, k, resultat, noeudsInfectes):
         resultatTest = findSolution(newGraph, newInfectes, k)
         if(resultatTest <= 50):
             newList.remove(node)
-            print(newList)
-    return newList
+            showRelations(newList, showWhat)
+
+def showRelations(NodeList, showWhat):
+    print("")  
+    if showWhat == "relations":
+        for node in NodeList:
+            print(str(node[0]) + " " + str(node[1]))
+    if showWhat == "number":
+        print(str(len(NodeList)))  
 
 def main(argv):
     #sys.setrecursionlimit(10**6)
@@ -129,35 +136,33 @@ def main(argv):
 
 
     k = int(argv[1])
+    showWhat = "number"
+    
     if len(argv) == 3:
         if argv[2] == "-p":
-            print("-p entered")
-
-
+            showWhat = "relations"
     # On get les noeuds qui pose problemes
     noeudsInfectes = []
     for i in range(0, len(graph)):
         noeuds = getNoeudsInfectees(graph, i, k, PersonnesInfectes)
         noeudsInfectes += noeuds
-    #for i in range(0, len(noeudsInfectee)):
-    #    print(noeudsInfectee[i])
-    #print(graph)
 
     listNoeudSupression = selectionMauvaisNoeuds(noeudsInfectes)
 
     graphTemp = graph
-#Initialisation du premier passage
+    #Initialisation du premier passage
     MeilleurListeNoeudsSuprrimer = []
     for index in range(0, len(noeudsInfectes)):
         couperLien(graphTemp, noeudsInfectes[index][0], noeudsInfectes[index][1])
-    #print(graph)
     resultat = findSolution(graphTemp, PersonnesInfectes, k)
     if(resultat < 50):
         MeilleurListeNoeudsSuprrimer = noeudsInfectes
 
-    print(MeilleurListeNoeudsSuprrimer)
+    showRelations(MeilleurListeNoeudsSuprrimer, showWhat)
 
-    MeilleurListeNoeudsSuprrimer = findBetterSolution(graph, PersonnesInfectes, k, resultat, noeudsInfectes)
+    findBetterSolution(graph, PersonnesInfectes, k, resultat, noeudsInfectes, showWhat)
+
+
 
 
     return
