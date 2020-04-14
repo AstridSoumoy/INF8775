@@ -215,7 +215,7 @@ def main(argv):
     graph = np.array([np.array(list(mapGraph)) for mapGraph in A])
 
 
-    k = 2 #int(argv[1])
+    k = int(argv[1])
     showWhat = "number"
     
     if len(argv) == 3:
