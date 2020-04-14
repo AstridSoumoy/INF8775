@@ -127,7 +127,7 @@ def initFirstSolution(graph,PersonnesInfectes, k, noeudsInfectes, showWhat):
     resultat = findSolution(graphTemp, PersonnesInfectes, k)
     if(resultat < 50):
         MeilleurListeNoeudsSuprrimer = noeudsInfectes
-    showRelations(MeilleurListeNoeudsSuprrimer, showWhat)
+        showRelations(MeilleurListeNoeudsSuprrimer, showWhat)
     return MeilleurListeNoeudsSuprrimer
 
 def getNoeudsInfectes(graph, k, PersonnesInfectes):
@@ -224,11 +224,12 @@ def main(argv):
 
 
 
-    test = getEchantillonAleatoire(graph, k, PersonnesInfectes)
+    #test = getEchantillonAleatoire(graph, k, PersonnesInfectes)
     # On get les noeuds qui pose problemes
-    #noeudsInfectes = getNoeudsInfectes(graph, k, PersonnesInfectes)
-    betterSolution = initFirstSolution(graph,PersonnesInfectes, k, test, showWhat)
-    betterSolution = findBetterSolution(graph, PersonnesInfectes, k, test, showWhat, betterSolution)
+    noeudsInfectes = getNoeudsInfectes(graph, k, PersonnesInfectes)
+    
+    betterSolution = initFirstSolution(graph,PersonnesInfectes, k, noeudsInfectes, showWhat)
+    #betterSolution = findBetterSolution(graph, PersonnesInfectes, k, test, showWhat, betterSolution)
     #betterSolution = findBetterSolutionRandomly2(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
 
     return
