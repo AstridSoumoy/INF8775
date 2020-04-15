@@ -198,6 +198,12 @@ def getEchantillonAleatoire(graph, k, PersonnesInfectes):
 
     return mauvaixNoeuds
 
+def enleverDoublon(listNoeudSupprimee):
+    for noeud in listNoeudSupprimee:
+        noeudTranspose = (noeud[1], noeud[0])
+        if noeudTranspose in listNoeudSupprimee:
+            listNoeudSupprimee.remove(noeudTranspose)
+
 
 def main(argv):
     file = open(argv[0], "r")
@@ -215,7 +221,7 @@ def main(argv):
     graph = np.array([np.array(list(mapGraph)) for mapGraph in A])
 
 
-    k = int(argv[1])
+    k = 2 # int(argv[1])
     showWhat = "number"
     
     if len(argv) == 3:
@@ -223,14 +229,31 @@ def main(argv):
             showWhat = "relations"
 
 
-
-    test = getEchantillonAleatoire(graph, k, PersonnesInfectes)
+    #print(graph[34][10])
+    #print(graph[10][34])
+    #test = getEchantillonAleatoire(graph, k, PersonnesInfectes)
     # On get les noeuds qui pose problemes
-    #noeudsInfectes = getNoeudsInfectes(graph, k, PersonnesInfectes)
-    betterSolution = initFirstSolution(graph,PersonnesInfectes, k, test, showWhat)
-    betterSolution = findBetterSolution(graph, PersonnesInfectes, k, test, showWhat, betterSolution)
-    #betterSolution = findBetterSolutionRandomly2(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
+    noeudsInfectes = getNoeudsInfectes(graph, k, PersonnesInfectes)
 
+
+    #for noeud in noeudsInfectes:
+    #    print(noeud)
+    print(len(noeudsInfectes))
+    enleverDoublon(noeudsInfectes)
+
+
+    print("------------------------------------------------")
+    print(len(noeudsInfectes))
+    #for noeud in noeudsInfectes:
+    #    print(noeud)
+
+
+
+    betterSolution = initFirstSolution(graph,PersonnesInfectes, k, noeudsInfectes, showWhat)
+    #betterSolution = findBetterSolution(graph, PersonnesInfectes, k, test, showWhat, betterSolution)
+    #betterSolution = findBetterSolutionRandomly2(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
+    #print(graph[34][10])
+    #print(graph[10][34])
     return
 
 if __name__ == "__main__":
