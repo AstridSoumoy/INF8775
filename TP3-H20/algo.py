@@ -127,7 +127,7 @@ def initFirstSolution(graph,PersonnesInfectes, k, noeudsInfectes, showWhat):
     resultat = findSolution(graphTemp, PersonnesInfectes, k)
     if(resultat < 50):
         MeilleurListeNoeudsSuprrimer = noeudsInfectes
-    showRelations(MeilleurListeNoeudsSuprrimer, showWhat)
+        showRelations(MeilleurListeNoeudsSuprrimer, showWhat)
     return MeilleurListeNoeudsSuprrimer
 
 def getNoeudsInfectes(graph, k, PersonnesInfectes):
