@@ -221,7 +221,7 @@ def main(argv):
     graph = np.array([np.array(list(mapGraph)) for mapGraph in A])
 
 
-    k = 2 # int(argv[1])
+    k = int(argv[1])
     showWhat = "number"
     
     if len(argv) == 3:
@@ -238,12 +238,12 @@ def main(argv):
 
     #for noeud in noeudsInfectes:
     #    print(noeud)
-    print(len(noeudsInfectes))
+    #print(len(noeudsInfectes))
     enleverDoublon(noeudsInfectes)
 
 
-    print("------------------------------------------------")
-    print(len(noeudsInfectes))
+    #print("------------------------------------------------")
+    #print(len(noeudsInfectes))
     #for noeud in noeudsInfectes:
     #    print(noeud)
 
