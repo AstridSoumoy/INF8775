@@ -235,16 +235,10 @@ def main(argv):
     
     betterSolution = initFirstSolution(graph,PersonnesInfectes, k, noeudsInfectes, showWhat)
     
-    betterSolution = findBetterSolution(graph, PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
-
     for i in range(0,1000):
         resultat = AmeliorerSolution(graph,PersonnesInfectes, k, noeudsInfectes, showWhat, betterSolution)
         if not(resultat == 0):
-            betterSolution = resultat
-    
-    
-    betterSolution = initFirstSolution(graph,PersonnesInfectes, k, noeudsInfectes, showWhat)
-    
+            betterSolution = resultat    
     
 
 

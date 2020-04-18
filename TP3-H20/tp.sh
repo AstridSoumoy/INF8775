@@ -24,4 +24,4 @@ case $key in
 esac
 shift
 done
-py ./algo.py $EX_PATH_1 $TAUX $OPTIONS
+python3 ./algo.py $EX_PATH_1 $TAUX $OPTIONS
